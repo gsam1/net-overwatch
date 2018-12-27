@@ -1,0 +1,6 @@
+/bin/*
+/lib/*
+/include/*
+/app/config/*
+/bot/config/*
+/netmonitor/config/*
