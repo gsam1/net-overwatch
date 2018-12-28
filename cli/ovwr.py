@@ -5,55 +5,61 @@ parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)
 netmonitor_location = parent + '/netmonitor'
 sys.path.append(netmonitor_location)
 # real imports
-import time
+import datetime
 import click
 from monitor import HostStatus
 
+def timestamp():
+    return('{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()))
+
+
 def long_print(hosts_statuses):
     for status in hosts_statuses:
-        print('[timestamp] ' + status)
+        print(f'[{timestamp()}] ' + status)
 
 def get_hosts_status(now):
     if now:
+        time = timestamp()
         host_status = HostStatus()
         status = host_status.pretty_status()
     else:
+        time = '[timestamp]'
         status = 'Not Implemented yet'
         print('Not Implemented yet')
     
-    return status
+    return (time,) + status
 
 def arg_by_hostname(hostname, now):
-    all_hosts, _, _ = get_hosts_status(now)
+    time, all_hosts, _, _ = get_hosts_status(now)
     host_arr = [host for host in all_hosts if hostname in host]
-    print(f'[timestamp]: {host_arr[0]}')
+    print(f'[{time}]: {host_arr[0]}')
 
 def arg_by_address(address, now):
-    all_hosts, _, _ = get_hosts_status(now)
+    time, all_hosts, _, _ = get_hosts_status(now)
     host_arr = [host for host in all_hosts if address in host]
-    print(f'[timestamp]: {host_arr[0]}')
+    print(f'[{time}]: {host_arr[0]}')
 
 
 def general_arg_parse(arg, long, now):
-    overview, up, down = get_hosts_status(now)
+    time, overview, up, down = get_hosts_status(now)
     # if/else galore
     if arg == 'all':
         if long:
             long_print(overview)
         else:
-            print(f'[timestamp] hosts up - {up}; hosts down - {down}')
+            print(f'[{time}] hosts up - {up}; hosts down - {down}')
     elif arg == 'up':
         if long:
             up_overview = [hst for hst in overview if 'up' in hst]
             long_print(up_overview)
         else:
-            print(f'[timestam] hosts up - {up}')
+            print(f'[{time}] hosts up - {up}')
     elif arg == 'down':
         if long:
             down_overview = [hst for hst in overview if 'down' in hst]
             long_print(down_overview)
         else:
-            print(f'[timestam] hosts down - {down}')       
+            print(f'[{time}] hosts down - {down}')       
     else:
         print('Wrong argument specified!')
 
