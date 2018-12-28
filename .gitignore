@@ -3,5 +3,6 @@
 /include/*
 /app/config/*
 /bot/config/*
+/db/*.db
 /netmonitor/config/*
 /netmonitor/__pycache__/*
