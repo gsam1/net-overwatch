@@ -9,8 +9,9 @@ import time
 import click
 from monitor import HostStatus
 
-# def long_print(status):
-#     for 
+def long_print(hosts_statuses):
+    for status in hosts_statuses:
+        print('[timestamp] ' + status)
 
 def get_hosts_status(now):
     if now:
@@ -22,23 +23,37 @@ def get_hosts_status(now):
     
     return status
 
+def arg_by_hostname(hostname, now):
+    all_hosts, _, _ = get_hosts_status(now)
+    host_arr = [host for host in all_hosts if hostname in host]
+    print(f'[timestamp]: {host_arr[0]}')
+
+def arg_by_address(address, now):
+    all_hosts, _, _ = get_hosts_status(now)
+    host_arr = [host for host in all_hosts if address in host]
+    print(f'[timestamp]: {host_arr[0]}')
+
+
 def general_arg_parse(arg, long, now):
+    overview, up, down = get_hosts_status(now)
+    # if/else galore
     if arg == 'all':
         if long:
-            print('[timestamp] hostname (ip) UP/DOWN')
+            long_print(overview)
         else:
-            _, up, down = get_hosts_status(now)
             print(f'[timestamp] hosts up - {up}; hosts down - {down}')
     elif arg == 'up':
         if long:
-            print('[timestamp] hostname (ip) UP')
+            up_overview = [hst for hst in overview if 'up' in hst]
+            long_print(up_overview)
         else:
-            print('[timestam[] hosts up - NUM')
+            print(f'[timestam] hosts up - {up}')
     elif arg == 'down':
         if long:
-            print('[timestamp] hostname (ip) DOWN')
+            down_overview = [hst for hst in overview if 'down' in hst]
+            long_print(down_overview)
         else:
-            print('[timestam[] hosts down - NUM')       
+            print(f'[timestam] hosts down - {down}')       
     else:
         print('Wrong argument specified!')
 
@@ -51,7 +66,15 @@ def general_arg_parse(arg, long, now):
 @click.option('--hostname', '-h', help='Specify Hostname')
 @click.argument('arg')
 def cli(now, verbose, ipaddress, hostname, arg):
-    general_arg_parse(arg, verbose, now)
+    if arg == 'sh':
+        if ipaddress is not None:
+            arg_by_address(ipaddress, now)
+        elif hostname is not None:
+            arg_by_hostname(hostname, now)
+        else:
+            click.echo('Wrong argument Specified')
+    else:
+        general_arg_parse(arg, verbose, now)
 
 
 

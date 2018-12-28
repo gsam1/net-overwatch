@@ -49,7 +49,8 @@ class HostStatus:
             Returns status by individual host and counts as a total.
         '''
         hosts_stat = self.hosts_status()
-        host_status = [host['host']['hostname'] + ' ' + host['host']['status'] for host in hosts_stat['overview']]
+        host_status = [host['host']['hostname'] + ' (' + host['host']['address'] + ') ' + 
+                                 host['host']['status'] for host in hosts_stat['overview']]
         total_up = len(hosts_stat['only_up'])
         total_down = len(hosts_stat['only_down'])
 
