@@ -1,5 +1,6 @@
 from multiping import MultiPing
 import json
+import os
 
 
 
@@ -8,9 +9,10 @@ class HostStatus:
         '''
             Initalize the class to get all of the needed options and hosts.
         '''
-        self.hosts = json.load(open('./config/config.json'))['hosts']
+        path = os.path.dirname(os.path.realpath(__file__)) + '/config/config.json'
+        self.hosts = json.load(open(path))['hosts']
         self.hosts_addresses = [self.hosts[key] for key in self.hosts.keys()]
-        self.response_time = json.load(open('./config/config.json'))['options']['response-time']
+        self.response_time = json.load(open(path))['options']['response-time']
 
     def _host_mapper(self, address, status):
         '''
@@ -27,6 +29,7 @@ class HostStatus:
             Check all hosts in the hosts file.
             Returns a hosts array with objects.
         '''
+        #TODO: Implement try except to give a meaningful error message
         mp = MultiPing(self.hosts_addresses)
         mp.send()
 

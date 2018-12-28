@@ -4,3 +4,4 @@
 /app/config/*
 /bot/config/*
 /netmonitor/config/*
+/netmonitor/__pycache__/*
