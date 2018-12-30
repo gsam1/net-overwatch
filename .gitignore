@@ -3,6 +3,7 @@
 /include/*
 /app/config/*
 /bot/config/*
+/bot/__pycache__/*
 /db/*.db
 /db/json_logs/*
 /db/__pycache__/*

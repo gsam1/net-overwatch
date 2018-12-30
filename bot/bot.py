@@ -36,7 +36,6 @@ class Bot(object):
             print('Successfully connected, listening for commands')
             while True:
                 self.event.wait_for_event()
-                 
                 time.sleep(1)
         else:
             exit('Error, Connection Failed')

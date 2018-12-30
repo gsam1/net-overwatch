@@ -63,6 +63,7 @@ class Command(object):
         host_status = HostStatus()
         detailed, _, _ = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        host_status.push_to_db()
 
         rstr = '\n'
         for item in detailed:
