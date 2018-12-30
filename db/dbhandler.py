@@ -12,7 +12,7 @@ Base = declarative_base()
 class Status(Base):
     __tablename__ = 'status'
     id = Column(Integer, primary_key = True)
-    lastupdate = Column(DateTime, default = func.now(), onupdate='{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now()))
+    lastupdate = Column(DateTime, default = datetime.datetime.now())
     up = Column('up', Integer)
     down = Column('down', Integer)
 
@@ -84,14 +84,3 @@ if __name__ == '__main__':
     dbhandler = DBHandler()
     status_table = Status()
     dbhandler.create_table(status_table)
-
-    # status = Status()
-    # status.up = 214
-    # status.down = 2
-
-    # dbhandler.push_one(status)
-
-    last = dbhandler.get_last(Status)
-    print(last)
-    all_entries = dbhandler.get_all(Status)
-    print(all_entries)

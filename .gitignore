@@ -4,5 +4,7 @@
 /app/config/*
 /bot/config/*
 /db/*.db
+/db/json_logs/*
+/db/__pycache__/*
 /netmonitor/config/*
 /netmonitor/__pycache__/*

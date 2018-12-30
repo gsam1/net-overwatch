@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, os
+import sys, os, json
 # DEM DIRTY HACKS
 parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
 netmonitor_location = parent + '/netmonitor'
@@ -21,8 +21,15 @@ def long_print(hosts_statuses):
         print(f'[{timestamp()}] ' + status)
 
 def query_db():
+    # query the db for the statuses
     dbhandler = DBHandler()
     response = dbhandler.get_last(Status)
+    
+    # load the last json file    
+    filename = response['lastupdate'].replace(':', '-').replace(' ', '-') + '.json'
+    path = db_location + '/json_logs/' + filename
+    data = json.load(open(path))['data']
+    response['data'] = data
 
     return response
 
@@ -31,13 +38,12 @@ def get_hosts_status(now):
         time = timestamp()
         host_status = HostStatus()
         status = host_status.pretty_status()
+        # update the database
+        host_status.push_to_db()
     else:
         last_entry = query_db()
-        print(last_entry)
         time = last_entry['lastupdate']
-        status = '', last_entry['up'], last_entry['down']
-        # status = 'Not Implemented yet'
-        # print('Not Implemented yet')
+        status = last_entry['data'], last_entry['up'], last_entry['down']
     
     return (time,) + status
 

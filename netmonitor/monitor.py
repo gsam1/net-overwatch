@@ -1,9 +1,23 @@
 from multiping import MultiPing
 import json
-import os
+import os,sys
+# DIRTY HACKS
+parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+db_location = parent + '/db'
+sys.path.append(db_location)
+# importing the db handler
+from dbhandler import Status, DBHandler
 
+# Helpers
+def save_to_json(filename, location, data):
+    filename = filename.replace(':', '-').replace(' ', '-')
+    file = location + filename + '.json'
+    data = {'data': data}
 
+    with open(file, 'w') as outfile:
+        json.dump(data, outfile)
 
+# Classes
 class HostStatus:
     def __init__(self):
         '''
@@ -59,10 +73,26 @@ class HostStatus:
 
     def push_to_db(self):
         '''
-            Upload the results of the hosts query.
+            Upload the results of the hosts query, as well as store the full output per host to a json file
         '''
-        pass
+
+        # Get the host statuses
+        overview, up, down = self.pretty_status()
+
+        # Upload the status to the db
+        dbhandler = DBHandler()
+        status = Status()
+        status.up = up
+        status.down = down
+        dbhandler.push_one(status)
+
+        # Get the last update to the db and record it as the filename for the json_log
+        response = dbhandler.get_last(Status)
+        filename = response['lastupdate']
+        logs_location = db_location + '/json_logs/'
+        save_to_json(filename, logs_location, overview)
+
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    print(host_status.pretty_status())
+    host_status.push_to_db()
