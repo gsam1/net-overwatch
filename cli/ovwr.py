@@ -3,7 +3,7 @@ import sys, os, json
 # DEM DIRTY HACKS
 app_location = os.environ['NMONITOR']
 db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
-netmonitor_location = json.load(os.path.join(app_location, open('configurator/module_map.json')))['netmonitor']
+netmonitor_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['netmonitor']
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
 # real imports
