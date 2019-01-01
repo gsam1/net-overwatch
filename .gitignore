@@ -4,6 +4,7 @@
 /app/config/*
 /bot/config/*
 /bot/__pycache__/*
+/configurator/*.json
 /db/*.db
 /db/json_logs/*
 /db/__pycache__/*

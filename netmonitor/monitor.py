@@ -2,8 +2,8 @@ from multiping import MultiPing
 import json
 import os,sys
 # DIRTY HACKS
-parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-db_location = parent + '/db'
+# parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+db_location = json.load(open('../configurator/module_map.json'))['db']
 sys.path.append(db_location)
 # importing the db handler
 from dbhandler import Status, DBHandler

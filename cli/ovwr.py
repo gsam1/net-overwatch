@@ -2,8 +2,10 @@
 import sys, os, json
 # DEM DIRTY HACKS
 parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-netmonitor_location = parent + '/netmonitor'
-db_location = parent + '/db'
+# netmonitor_location = parent + '/netmonitor'
+# db_location = parent + '/db'
+netmonitor_location = json.load(open('../configurator/module_map.json'))['netmonitor']
+db_location = json.load(open('../configurator/module_map.json'))['db']
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
 # real imports
