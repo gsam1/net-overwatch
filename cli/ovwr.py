@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 import sys, os, json
 # DEM DIRTY HACKS
-parent = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-# netmonitor_location = parent + '/netmonitor'
-# db_location = parent + '/db'
-netmonitor_location = json.load(open('../configurator/module_map.json'))['netmonitor']
-db_location = json.load(open('../configurator/module_map.json'))['db']
+app_location = os.environ['NMONITOR']
+db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
+netmonitor_location = json.load(os.path.join(app_location, open('configurator/module_map.json')))['netmonitor']
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
 # real imports

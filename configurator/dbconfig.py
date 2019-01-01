@@ -1,6 +1,7 @@
 import os, sys
 import json
-db_location = json.load(open('../configurator/module_map.json'))['db']
+app_location = os.environ['NMONITOR']
+db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
 sys.path.append(db_location)
 from dbhandler import Status, DBHandler
 
