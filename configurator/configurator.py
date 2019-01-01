@@ -1,6 +1,5 @@
 import os, sys
 import json
-import dbconfig
 
 def save_to_json(filename, data):
     file = filename + '.json'
@@ -25,6 +24,4 @@ def config(modules):
 if __name__ == '__main__':
     module_config_map = config(['bot','cli','netmonitor','db'])
     save_to_json('module_map', module_config_map)
-    db_location = module_config_map['db']
-    sys.path.append(db_location)
-    dbconfig.create_db_table()
+
