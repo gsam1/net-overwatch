@@ -18,7 +18,7 @@ class Event:
         events = self.bot.slack_client.rtm_read()
         
 
-        if self.report_time(2):
+        if self.report_time(REPORTING_INTERVAL):
             self.handle_event(REPORT_TO, 'status detailed now', REPORT_CHANNEL)
         elif (events and len(events) > 0):
             for event in events:
@@ -27,7 +27,7 @@ class Event:
 
     def report_time(self, interval):
         # interval in minutes
-        next_update = self.starttime + timedelta(minutes = interval)
+        next_update = self.starttime + timedelta(hours = interval)
         timediff = next_update - datetime.now()
         if (timediff.days*86400 + timediff.seconds) < 5:
             self.starttime = datetime.now()
