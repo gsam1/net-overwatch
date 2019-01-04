@@ -6,7 +6,7 @@ import event
 import command
 from slackclient import SlackClient
 
-TOKEN = json.load(open(os.path.dirname(os.path.realpath(__file__)) + './config/slack.json', 'r'))['token']
+TOKEN = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config/slack.json', 'r'))['token']
 
 class Bot(object):
     def __init__(self):
