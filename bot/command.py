@@ -18,6 +18,7 @@ class Command(object):
             'status detailed': self.dstatus,
             'status now' : self.nstatus,
             'status detailed now': self.dstatusn,
+            'status now detailed': self.dstatusn,
             'help' : self.help
         }
  
@@ -57,6 +58,7 @@ class Command(object):
         host_status = HostStatus()
         _, up, down = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        host_status.push_to_db()
         return f'[{timestamp}] - Hosts UP: {up}; DOWN: {down}'
     
     def dstatusn(self):
