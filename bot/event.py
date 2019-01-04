@@ -3,7 +3,7 @@ import os
 import json
 from datetime import datetime, timedelta
 
-SLACK_CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + './config/slack.json', 'r'))
+SLACK_CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config/slack.json', 'r'))
 REPORT_CHANNEL = SLACK_CONFIG['report_channel']
 REPORT_FROM = SLACK_CONFIG['report_from']
 REPORT_TO = SLACK_CONFIG['report_to']
