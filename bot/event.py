@@ -2,10 +2,11 @@ import command
 import json
 from datetime import datetime, timedelta
 
-REPORT_CHANNEL = json.load(open('./config/slack.json', 'r'))['report_channel']
-REPORT_FROM = json.load(open('./config/slack.json', 'r'))['report_from']
-REPORT_TO = json.load(open('./config/slack.json', 'r'))['report_to']
-REPORTING_INTERVAL = json.load(open('./config/slack.json', 'r'))['reporting_interval']
+SLACK_CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + './config/slack.json', 'r'))
+REPORT_CHANNEL = SLACK_CONFIG['report_channel']
+REPORT_FROM = SLACK_CONFIG['report_from']
+REPORT_TO = SLACK_CONFIG['report_to']
+REPORTING_INTERVAL = SLACK_CONFIG['reporting_interval']
 
 
 class Event:
