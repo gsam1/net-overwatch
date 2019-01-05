@@ -19,7 +19,7 @@ class Event:
     def wait_for_event(self):
         events = self.bot.slack_client.rtm_read()
         
-        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
         if self.report_time(REPORTING_INTERVAL):
             self.handle_event(REPORT_TO, 'status detailed now', REPORT_CHANNEL)
         elif (events and len(events) > 0):
