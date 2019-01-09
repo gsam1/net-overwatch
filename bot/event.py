@@ -1,6 +1,7 @@
 import command
 import os
 import json
+import time
 from datetime import datetime, timedelta
 
 SLACK_CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config/slack.json', 'r'))
@@ -17,7 +18,16 @@ class Event:
         self.starttime = datetime.now()
 
     def wait_for_event(self):
-        events = self.bot.slack_client.rtm_read()
+        # ISSUE: Timeout issue to be fixed
+        # Hacky attempt to fix the timeout errors
+        # handling the exceptions when they come
+        try:
+            events = self.bot.slack_client.rtm_read()
+        except TimeoutError:
+            # put the bot to sleep for 30s
+            time.sleep(30)
+            # then try again
+            events = self.bot.slack_client.rtm_read()
         
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
         if self.report_time(REPORTING_INTERVAL):
