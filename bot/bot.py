@@ -35,7 +35,11 @@ class Bot(object):
         if self.slack_client.rtm_connect(with_team_state=False):
             print('Successfully connected, listening for commands')
             while True:
-                self.event.wait_for_event()
+                # random disconnet fix, because of the Web Socket Closed
+                try:
+                    self.event.wait_for_event()
+                except WebSocketConnectionClosedException:
+                    self.listen()
                 time.sleep(1)
         else:
             exit('Error, Connection Failed')

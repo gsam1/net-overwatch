@@ -48,7 +48,7 @@ class Command(object):
         path = db_location + '/json_logs/' + filename
         data = json.load(open(path))['data']
         
-        rstr = ''
+        rstr = '\n'
         for item in data:
             rstr += item + '\n'
 
@@ -58,6 +58,7 @@ class Command(object):
         host_status = HostStatus()
         _, up, down = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        print(f'{timestamp} - Call to db')
         host_status.push_to_db()
         return f'[{timestamp}] - Hosts UP: {up}; DOWN: {down}'
     

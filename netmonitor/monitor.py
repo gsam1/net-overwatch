@@ -51,6 +51,7 @@ class HostStatus:
 
         resp = [self._host_mapper(addr, 'up') for addr in responses]
         no_resp = [self._host_mapper(addr, 'down') for addr in no_responses]
+        
 
         return {'overview': resp + no_resp,
                 'only_up': resp,
@@ -67,7 +68,7 @@ class HostStatus:
                                  host['host']['status'] for host in hosts_stat['overview']]
         total_up = len(hosts_stat['only_up'])
         total_down = len(hosts_stat['only_down'])
-
+        self._host_status_pretty = (hosts_Status, total_up, total_down)
         return host_status, total_up, total_down
 
 
@@ -76,14 +77,18 @@ class HostStatus:
             Upload the results of the hosts query, as well as store the full output per host to a json file
         '''
 
-        # Get the host statuses
-        overview, up, down = self.pretty_status()
+        # Get the host statuses, if the method was call before use the internal vaariable, if not use the method
+        try:
+            overview, up, down = self._host_status_pretty
+        except:
+            overview, up, down = self.pretty_status()
 
         # Upload the status to the db
         dbhandler = DBHandler()
         status = Status()
         status.up = up
         status.down = down
+        print('DBHandler called.')
         dbhandler.push_one(status)
 
         # Get the last update to the db and record it as the filename for the json_log
