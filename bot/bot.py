@@ -38,7 +38,7 @@ class Bot(object):
                 # random disconnet fix, because of the Web Socket Closed
                 try:
                     self.event.wait_for_event()
-                except WebSocketConnectionClosedException:
+                except:
                     self.listen()
                 time.sleep(1)
         else:
