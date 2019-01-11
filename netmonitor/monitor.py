@@ -68,7 +68,7 @@ class HostStatus:
                                  host['host']['status'] for host in hosts_stat['overview']]
         total_up = len(hosts_stat['only_up'])
         total_down = len(hosts_stat['only_down'])
-        self._host_status_pretty = (hosts_Status, total_up, total_down)
+        self._host_status_pretty = (host_status, total_up, total_down)
         return host_status, total_up, total_down
 
 
