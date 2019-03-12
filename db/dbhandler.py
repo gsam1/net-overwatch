@@ -2,19 +2,34 @@ import sys, os
 import sqlite3
 import datetime
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Date, Integer, String, DateTime, func
-from sqlalchemy.orm import scoped_session,sessionmaker
+from sqlalchemy import Column, Date, Integer, String, DateTime, ForeignKey, func
+from sqlalchemy.orm import scoped_session, sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 
 Base = declarative_base()
 
+##### DEPRICATED
 class Status(Base):
     __tablename__ = 'status'
     id = Column(Integer, primary_key = True)
     lastupdate = Column(DateTime, default = datetime.datetime.now())
     up = Column('up', Integer)
     down = Column('down', Integer)
+##### 
+
+class Hosts(Base):
+    __tablename__ = 'hosts'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    last_active = Column(DateTime)
+    checks = relationship('Checks')
+
+class Checks(Base):
+    __tablename__ = 'checks'
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime)
+    host = Column(Integer, ForeignKey('hosts.id'))
 
 
 class DBHandler():
@@ -82,5 +97,6 @@ class DBHandler():
         
 if __name__ == '__main__':
     dbhandler = DBHandler()
-    status_table = Status()
-    dbhandler.create_table(status_table)
+    tables = [Hosts(), Checks()]
+    for table in tables:
+        dbhandler.create_table(table)
