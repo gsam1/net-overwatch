@@ -2,8 +2,16 @@ from multiping import MultiPing
 import json
 import os,sys
 # DIRTY HACKS
-app_location = os.environ['NMONITOR']
+try:
+    app_location = os.environ['NMONITOR']
+except:
+    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
 db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
+# for the dev path
+if not os.path.isdir(db_location):
+    db_location = os.path.abspath(os.path.join(__file__, '..')) + '/dbhandler'
+
 sys.path.append(db_location)
 # importing the db handler
 from dbhandler import Status, DBHandler
@@ -88,7 +96,6 @@ class HostStatus:
         status = Status()
         status.up = up
         status.down = down
-        print('DBHandler called.')
         dbhandler.push_one(status)
 
         # Get the last update to the db and record it as the filename for the json_log

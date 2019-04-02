@@ -1,7 +1,11 @@
 import sys, os, json
 import datetime
 # DEM DIRTY HACKS
-app_location = os.environ['NMONITOR']
+try:
+    app_location = os.environ['NMONITOR']
+except:
+    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+print(app_location)
 db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
 netmonitor_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['netmonitor']
 sys.path.append(netmonitor_location)
