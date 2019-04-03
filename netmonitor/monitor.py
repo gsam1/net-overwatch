@@ -14,7 +14,7 @@ if not os.path.isdir(db_location):
 
 sys.path.append(db_location)
 # importing the db handler
-from dbhandler import Status, DBHandler
+from dbhandler import Status, DBHandler, Hosts, Checks
 
 # Helpers
 def save_to_json(filename, location, data):
@@ -24,6 +24,26 @@ def save_to_json(filename, location, data):
 
     with open(file, 'w') as outfile:
         json.dump(data, outfile)
+
+def push_hosts_to_db(hosts):
+    '''Push the the hosts in the config file to the database
+    
+    Arguments:
+        hosts {list or dict}
+    '''
+    dbhandler = DBHandler()
+    # parse the hosts and create an array of host objects that need to be parsed.
+    host_entries = []
+
+    for host in hosts.keys():
+        # assign to new table host
+        host = Hosts()
+        host.name = host
+        host.address = hosts[host]
+        host_entries.append(host)
+        
+
+    dbhandler.push_hosts(host_entries)
 
 # Classes
 class HostStatus:
@@ -107,4 +127,4 @@ class HostStatus:
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    host_status.push_to_db()
+    print(host_status.hosts_status())

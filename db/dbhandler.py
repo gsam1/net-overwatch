@@ -22,7 +22,8 @@ class Hosts(Base):
     __tablename__ = 'hosts'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    last_active = Column(DateTime)
+    address = Column(String)
+    last_active = Column(DateTime, default=datetime.datetime.now())
     checks = relationship('Checks')
 
 class Checks(Base):
@@ -31,6 +32,11 @@ class Checks(Base):
     timestamp = Column(DateTime)
     host = Column(Integer, ForeignKey('hosts.id'))
 
+class Options(Base):
+    __tablename__ = 'options'
+    id = Column(Integer, primary_key=True)
+    parameter = Column(String)
+    value = Column(String)
 
 class DBHandler():
     def __init__(self):
