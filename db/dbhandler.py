@@ -23,6 +23,7 @@ class Hosts(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     address = Column(String)
+    mac = Column(String, default='NaN')
     last_active = Column(DateTime, default=datetime.datetime.now())
     checks = relationship('Checks')
 

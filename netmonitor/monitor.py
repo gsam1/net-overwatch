@@ -37,13 +37,15 @@ def push_hosts_to_db(hosts):
 
     for host in hosts.keys():
         # assign to new table host
-        host = Hosts()
-        host.name = host
-        host.address = hosts[host]
+        host_instance = Hosts()
+        host_instance.name = host
+        host_instance.address = hosts[host]
         host_entries.append(host)
         
 
-    dbhandler.push_hosts(host_entries)
+    dbhandler.push_many(host_entries)
+
+    print('Complete')
 
 # Classes
 class HostStatus:
@@ -127,4 +129,4 @@ class HostStatus:
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    print(host_status.hosts_status())
+    push_hosts_to_db(host_status.hosts)
