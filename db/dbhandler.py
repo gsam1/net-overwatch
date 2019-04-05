@@ -85,6 +85,28 @@ class DBHandler():
             host_instance.mac = host_data['mac']
 
         self.push_one(host_instance)
+    
+    def get_hosts(self):
+        '''A method to get all the hosts from the database
+        '''
+        session = self._session()
+        # hosts = Hosts()
+
+        result = session.query(Hosts)
+        resp = []
+
+        for item in result:
+            resp.append({
+                'name': item.name,
+                'address': item.address,
+                'mac': item.mac,
+                'last_active': item.last_active
+            })
+
+        session.close()
+
+        return resp
+
 
     def get_all(self, table):
         session = self._session()
@@ -118,6 +140,7 @@ class DBHandler():
         
 if __name__ == '__main__':
     dbhandler = DBHandler()
-    tables = [Hosts(), Checks()]
-    for table in tables:
-        dbhandler.create_table(table)
+    print(dbhandler.get_hosts())
+    # tables = [Hosts(), Checks()]
+    # for table in tables:
+    #     dbhandler.create_table(table)
