@@ -54,17 +54,24 @@ class HostStatus:
             Initalize the class to get all of the needed options and hosts.
         '''
         path = os.path.dirname(os.path.realpath(__file__)) + '/config/config.json'
-        self.hosts = json.load(open(path))['hosts']
-        self.hosts_addresses = [self.hosts[key] for key in self.hosts.keys()]
+        # self.hosts = json.load(open(path))['hosts']
+        # TODO: load the hosts from the db query
+        self.dbhandler = DBHandler()
+        self.hosts = self.dbhandler.get_hosts()
+        # self.hosts_addresses = [self.hosts[key] for key in self.hosts.keys()]
+        self.hosts_addresses = [item['address'] for item in self.hosts]
         self.response_time = json.load(open(path))['options']['response-time']
 
     def _host_mapper(self, address, status):
         '''
             Maps the address to the hostname.
         '''
-        for name, ip in self.hosts.items():
-            if ip == address:
-                hostname = name
+        # for name, ip in self.hosts.items():
+        #     if ip == address:
+        #         hostname = name
+        for item in self.hosts:
+            if item['address'] == address:
+                hostname = item['name']
 
         return {'host': {'hostname': hostname, 'address':address, 'status':status}}
 
@@ -114,14 +121,14 @@ class HostStatus:
             overview, up, down = self.pretty_status()
 
         # Upload the status to the db
-        dbhandler = DBHandler()
+        # dbhandler = DBHandler()
         status = Status()
         status.up = up
         status.down = down
-        dbhandler.push_one(status)
+        self.dbhandler.push_one(status)
 
         # Get the last update to the db and record it as the filename for the json_log
-        response = dbhandler.get_last(Status)
+        response = self.dbhandler.get_last(Status)
         filename = response['lastupdate']
         logs_location = db_location + '/json_logs/'
         save_to_json(filename, logs_location, overview)
@@ -129,4 +136,5 @@ class HostStatus:
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    push_hosts_to_db(host_status.hosts)
+    # push_hosts_to_db(host_status.hosts)
+    print(host_status.pretty_status())
