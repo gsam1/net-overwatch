@@ -32,6 +32,8 @@ class Checks(Base):
     id = Column(Integer, primary_key=True)
     timestamp = Column(DateTime)
     host = Column(Integer, ForeignKey('hosts.id'))
+    check_group = Column(Integer)
+    status = Column(String)
 
 class Options(Base):
     __tablename__ = 'options'
