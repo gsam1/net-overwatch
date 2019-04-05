@@ -72,6 +72,20 @@ class DBHandler():
         for item in data_array:
             self.push_one(item)
     
+    def push_host(self, host_data):
+        '''Method to push single host data to the database.
+        
+        Arguments:
+            host_data {dict} -- the needed data for creating the host entry
+        '''
+        host_instance = Hosts()
+        host_instance.name = host_data['name']
+        host_instance.address = host_data['address']
+        if 'mac' in host_data.keys():
+            host_instance.mac = host_data['mac']
+
+        self.push_one(host_instance)
+
     def get_all(self, table):
         session = self._session()
         result = session.query(table)

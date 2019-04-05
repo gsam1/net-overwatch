@@ -26,7 +26,8 @@ def save_to_json(filename, location, data):
         json.dump(data, outfile)
 
 def push_hosts_to_db(hosts):
-    '''Push the the hosts in the config file to the database
+    '''Push the the hosts in the config file to the database.
+        The idea is to call upon this function in the setup phase.
     
     Arguments:
         hosts {list or dict}
@@ -40,9 +41,8 @@ def push_hosts_to_db(hosts):
         host_instance = Hosts()
         host_instance.name = host
         host_instance.address = hosts[host]
-        host_entries.append(host)
+        host_entries.append(host_instance)
         
-
     dbhandler.push_many(host_entries)
 
     print('Complete')
