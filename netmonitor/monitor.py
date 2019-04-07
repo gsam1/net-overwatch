@@ -1,6 +1,7 @@
 from multiping import MultiPing
 import json
 import os,sys
+import datetime
 # DIRTY HACKS
 try:
     app_location = os.environ['NMONITOR']
@@ -108,6 +109,24 @@ class HostStatus:
         self._host_status_pretty = (host_status, total_up, total_down)
         return host_status, total_up, total_down
 
+    def publish_result(self):
+        '''
+            Uses the host_status method and returns the results so that it can be pushed to the checks
+        '''
+        hosts_stats = self.hosts_status()['overview']
+        #generate the timestap
+        timestamp = datetime.datetime.utcnow()
+        group_id = self.dbhandler.get_last_pushed_group() + 1
+
+
+        for item in hosts_stats:
+            check = Checks()
+            # handle timestamp in the proper format
+            check.timestamp = timestamp
+            check.host = self.dbhandler.get_host_id(item['name'])
+            check.check_group = group_id # get the last host and increment it by one
+            check.status = item['status']
+
 
     def push_to_db(self):
         '''
@@ -137,4 +156,4 @@ class HostStatus:
 if __name__  == '__main__':
     host_status = HostStatus()
     # push_hosts_to_db(host_status.hosts)
-    print(host_status.pretty_status())
+    print(host_status.hosts_status()['overview'])

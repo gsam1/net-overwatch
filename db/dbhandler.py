@@ -139,6 +139,21 @@ class DBHandler():
         session.close()
 
         return response
+
+    def get_last_pushed_group(self):
+        '''Get the last pushed group of Checks from the Checks table from the db
+        '''
+        pass
+
+    def get_host_id(self, name):
+        '''Get the host id from the Hosts table from the specified name.
+
+        Arguments:
+            name {str} -- name of the host name.
+        '''
+        
+
+
         
 if __name__ == '__main__':
     dbhandler = DBHandler()
