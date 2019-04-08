@@ -126,6 +126,7 @@ class HostStatus:
             check.host = self.dbhandler.get_host_id(item['name'])
             check.check_group = group_id # get the last host and increment it by one
             check.status = item['status']
+            self.dbhandler.push_one(check)
 
 
     def push_to_db(self):
@@ -156,4 +157,5 @@ class HostStatus:
 if __name__  == '__main__':
     host_status = HostStatus()
     # push_hosts_to_db(host_status.hosts)
-    print(host_status.hosts_status()['overview'])
+    # print(host_status.hosts_status()['overview'])
+    host_status.publish_result()

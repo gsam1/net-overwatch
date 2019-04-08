@@ -143,7 +143,15 @@ class DBHandler():
     def get_last_pushed_group(self):
         '''Get the last pushed group of Checks from the Checks table from the db
         '''
-        pass
+        session = self._session()
+        result = session.query(Checks).order_by(Checks.check_group.desc()).limit(1)
+
+        last_group = 0
+        
+        for item in result:
+            last_group = item.check_group
+
+        return last_group
 
     def get_host_id(self, name):
         '''Get the host id from the Hosts table from the specified name.
@@ -151,13 +159,18 @@ class DBHandler():
         Arguments:
             name {str} -- name of the host name.
         '''
+
+        session = self._session()
+        query = session.query(Hosts.id).filter_by(name=name).first()
         
+        return query[0]
 
 
         
 if __name__ == '__main__':
     dbhandler = DBHandler()
-    print(dbhandler.get_hosts())
+    # print(dbhandler.get_hosts())
+    print(dbhandler.get_host_id('furynet-skybridge1'))
     # tables = [Hosts(), Checks()]
     # for table in tables:
     #     dbhandler.create_table(table)
