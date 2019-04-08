@@ -115,17 +115,17 @@ class HostStatus:
         '''
         hosts_stats = self.hosts_status()['overview']
         #generate the timestap
-        timestamp = datetime.datetime.utcnow()
+        timestamp = datetime.datetime.now()
         group_id = self.dbhandler.get_last_pushed_group() + 1
 
-
+        # push the results to the database
         for item in hosts_stats:
             check = Checks()
             # handle timestamp in the proper format
             check.timestamp = timestamp
-            check.host = self.dbhandler.get_host_id(item['name'])
+            check.host = self.dbhandler.get_host_id(item['host']['hostname'])
             check.check_group = group_id # get the last host and increment it by one
-            check.status = item['status']
+            check.status = item['host']['status']
             self.dbhandler.push_one(check)
 
 
@@ -157,5 +157,5 @@ class HostStatus:
 if __name__  == '__main__':
     host_status = HostStatus()
     # push_hosts_to_db(host_status.hosts)
-    # print(host_status.hosts_status()['overview'])
+    # print(host_status.hosts_status()['overview'][0]['host']['hostname'])
     host_status.publish_result()
