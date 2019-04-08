@@ -147,7 +147,7 @@ class DBHandler():
         result = session.query(Checks).order_by(Checks.check_group.desc()).limit(1)
 
         last_group = 0
-        
+
         for item in result:
             last_group = item.check_group
 
@@ -165,12 +165,46 @@ class DBHandler():
         
         return query[0]
 
+    def get_hostname_by_id(self, id):
+        '''Get the hostname by id
+        
+        Arguments:
+            id {int} -- Get the item's hostname by the id of the host
+        '''
+        session = self._session()
+        query = session.query(Hosts).filter_by(id = id).first()
+
+        return query.name
+
+    def get_checks_from_check_group(self, group):
+        '''Gets the checks from a certain group
+        
+        Arguments:
+            group {int} -- the group to be checked
+        '''
+        session = self._session()
+        query = session.query(Checks).filter_by(check_group=group)
+
+        result = []
+
+        for item in query:
+            result.append({
+                'name': self.get_hostname_by_id(item.host),
+                'status': item.status,
+                'timestamp': item.timestamp
+            })
+
+
+        return result
+
 
         
 if __name__ == '__main__':
     dbhandler = DBHandler()
     # print(dbhandler.get_hosts())
-    print(dbhandler.get_host_id('furynet-skybridge1'))
+    # print(dbhandler.get_host_id('furynet-skybridge1'))
+    print(dbhandler.get_checks_from_check_group(2))
+    # print(dbhandler.get_hostname_by_id(4))
     # tables = [Hosts(), Checks()]
     # for table in tables:
     #     dbhandler.create_table(table)
