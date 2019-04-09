@@ -75,11 +75,13 @@ class Command(object):
     
     def dstatusn(self):
         host_status = HostStatus()
-        detailed, _, _ = host_status.pretty_status()
+        detailed, up, down = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         host_status.publish_result()
 
-        rstr = '\n'
+        rstr = f'\n OVERVIEW: Hosts UP: {up}; DOWN: {down}\n'
+        rstr +='---------------------------------------------------------------\n'
+
         for item in detailed:
             rstr += f'[{timestamp}] ' + item + '\n'
 
