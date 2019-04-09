@@ -196,6 +196,32 @@ class DBHandler():
 
 
         return result
+    
+    def get_last_pushed_results(self):
+        ''' Get the results from the last pushed group
+        '''
+        last_pushed_group = self.get_last_pushed_group()
+        result = self.get_checks_from_check_group(last_pushed_group)
+        timestamp = result[0]['timestamp']
+
+        # get num up
+        up = 0
+        for item in result:
+            if item['status'] == 'up':
+                up += 1
+        
+        # get num down
+        down = 0
+        for item in result:
+            if item['status'] == 'down':
+                down += 1
+
+        return {
+            'timestamp': timestamp,
+            'up': up, 
+            'down': down, 
+            'details': result
+            }
 
 
         
@@ -203,7 +229,7 @@ if __name__ == '__main__':
     dbhandler = DBHandler()
     # print(dbhandler.get_hosts())
     # print(dbhandler.get_host_id('furynet-skybridge1'))
-    print(dbhandler.get_checks_from_check_group(2))
+    print(dbhandler.get_last_pushed_results())
     # print(dbhandler.get_hostname_by_id(4))
     # tables = [Hosts(), Checks()]
     # for table in tables:

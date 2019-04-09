@@ -38,8 +38,9 @@ class Command(object):
     
     def status(self):
         dbhandler = DBHandler()
-        response = dbhandler.get_last(Status)
-        timestamp = response['lastupdate']
+        # response = dbhandler.get_last(Status)
+        response = dbhandler.get_last_pushed_results()
+        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(response['timestamp'])
         up = response['up']
         down = response['down']
 
@@ -63,14 +64,14 @@ class Command(object):
         _, up, down = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         print(f'{timestamp} - Call to db')
-        host_status.push_to_db()
+        host_status.publish_result()
         return f'[{timestamp}] - Hosts UP: {up}; DOWN: {down}'
     
     def dstatusn(self):
         host_status = HostStatus()
         detailed, _, _ = host_status.pretty_status()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        host_status.push_to_db()
+        host_status.publish_result()
 
         rstr = '\n'
         for item in detailed:
