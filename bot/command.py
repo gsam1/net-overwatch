@@ -48,14 +48,20 @@ class Command(object):
 
     def dstatus(self):
         dbhandler = DBHandler()
-        response = dbhandler.get_last(Status)
-        filename = response['lastupdate'].replace(':', '-').replace(' ', '-') + '.json'
-        path = db_location + '/json_logs/' + filename
-        data = json.load(open(path))['data']
-        
-        rstr = '\n'
-        for item in data:
-            rstr += item + '\n'
+        response = dbhandler.get_last_pushed_results()
+        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(response['timestamp'])
+        up = response['up']
+        down = response['down']
+
+        rstr = f'\n OVERVIEW: Hosts UP: {up}; DOWN: {down}\n'
+        rstr +='---------------------------------------------------------------\n'
+
+        for item in response['details']:
+            name = item['name']
+            address = item['address']
+            status = item['status']
+            ret_str = f'[{timestamp}] {name} ({address}) {status}\n'
+            rstr += ret_str
 
         return rstr
 

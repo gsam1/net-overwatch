@@ -175,6 +175,18 @@ class DBHandler():
         query = session.query(Hosts).filter_by(id = id).first()
 
         return query.name
+    
+    def get_host_address_by_id(self, id):
+        '''Get the host address by id
+        
+        Arguments:
+            id {int} -- Get the host's address by id.
+        '''
+        session = self._session()
+        query = session.query(Hosts).filter_by(id = id).first()
+
+        return query.address
+
 
     def get_checks_from_check_group(self, group):
         '''Gets the checks from a certain group
@@ -190,6 +202,7 @@ class DBHandler():
         for item in query:
             result.append({
                 'name': self.get_hostname_by_id(item.host),
+                'address': self.get_host_address_by_id(item.host),
                 'status': item.status,
                 'timestamp': item.timestamp
             })
@@ -230,7 +243,7 @@ if __name__ == '__main__':
     # print(dbhandler.get_hosts())
     # print(dbhandler.get_host_id('furynet-skybridge1'))
     print(dbhandler.get_last_pushed_results())
-    # print(dbhandler.get_hostname_by_id(4))
+    # print(dbhandler.get_host_address_by_id(4))
     # tables = [Hosts(), Checks()]
     # for table in tables:
     #     dbhandler.create_table(table)
