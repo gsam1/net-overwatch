@@ -10,15 +10,24 @@ except:
 
 db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
 netmonitor_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['netmonitor']
+bot_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['bot']
+sys.path.append(bot_location)
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
 from dbhandler import DBHandler
 from monitor import HostStatus
+from slackclient import SlackClient
+
 
 
 ENV = 'development'
 app = Flask(__name__)
 dbhandler = DBHandler()
+
+####### Optional Slack Client
+CONFIG = json.load(open(os.path.dirname(os.path.realpath(bot_location)) + '/bot/config/slack.json', 'r'))
+sc = SlackClient(CONFIG['token'])
+###### ROUTES
 
 @app.route('/')
 def index():
@@ -88,7 +97,19 @@ def model_training_done():
     '''A route that tells the bot if the ml model running is done
     '''
     req = request.get_json()
+    host = req['host']
+    msg = ''
+    if 'msg' in req.keys():
+        msg = req['msg']
+    else:
+        msg = 'Training of model complete!'
+    # add mention
+    msg = '<@' + CONFIG['report_to'] + '>: HOST: ' + host + ' | ' + msg
+        
     # tell bot ('Model training done' or custom msg, host training)
+    sc.api_call("chat.postMessage", channel=CONFIG['report_channel'], text=msg, user=CONFIG['report_from'])
+
+    return 'Message Sent'
 
 
 if __name__ == '__main__':
