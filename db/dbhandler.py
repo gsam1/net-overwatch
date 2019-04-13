@@ -253,7 +253,7 @@ class DBHandler():
             params_to_update {dict} -- which parameters to update
         '''
         session = self._session()
-        host = Hosts.query.get(5)
+        host = session.query(Hosts).get(id)
 
         for key in params_to_update.keys():
             setattr(host, key, params_to_update[key])

@@ -24,8 +24,8 @@ dbhandler = DBHandler()
 def index():
     return 'Network Overwatch API'
 
-@app.route('/upload_host', methods=['POST'])
-def upload_host():
+@app.route('/add_host', methods=['POST'])
+def add_host():
     req = request.get_json()
     dbhandler.push_host(req)
 
