@@ -82,5 +82,14 @@ def get_current_hosts_status():
 
     return json.dumps(resp)
 
+# NEW FEATURE
+@app.route('/model_training_done', methods=['POST'])
+def model_training_done():
+    '''A route that tells the bot if the ml model running is done
+    '''
+    req = request.get_json()
+    # tell bot ('Model training done' or custom msg, host training)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
