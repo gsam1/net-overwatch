@@ -111,6 +111,15 @@ class DBHandler():
 
 
     def get_all(self, table):
+        '''Get all records from the table
+        
+        Arguments:
+            table {string} -- the table to get
+        
+        Returns:
+            [dict] -- with the response from the table
+        '''
+
         session = self._session()
         result = session.query(table)
 
@@ -235,7 +244,23 @@ class DBHandler():
             'down': down, 
             'details': result
             }
+    
+    def update_host(self, id, params_to_update):
+        '''Update the host identified by id number with the params_to_update
+        
+        Arguments:
+            id {int} -- the id of the searched host
+            params_to_update {dict} -- which parameters to update
+        '''
+        session = self._session()
+        host = Hosts.query.get(5)
 
+        for key in params_to_update.keys():
+            setattr(host, key, params_to_update[key])
+        
+        session.add(host)
+        session.commit()
+        session.close()
 
         
 if __name__ == '__main__':

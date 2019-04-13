@@ -29,10 +29,18 @@ def upload_host():
     req = request.get_json()
     dbhandler.push_host(req)
 
+    return 'Host Pushed'
+
 @app.route('/update_host', methods=['POST'])
 def update_host():
     req = request.get_json()
-    dbhandler.update_host(req)
+    hostname = req['host']
+    # get the host which to update
+    host_id = dbhandler.get_host_id(hostname)
+    # update the hostname
+    dbhandler.update_host(id=host_id, params_to_update=req['vars'])
+
+    return f'Host {hostname} updated'
     
 
 
