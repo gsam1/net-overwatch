@@ -54,7 +54,7 @@ class Command(object):
         down = response['down']
 
         rstr = f'\n OVERVIEW: Hosts UP: {up}; DOWN: {down}\n'
-        rstr +='---------------------------------------------------------------\n'
+        rstr +='------------------------------------------------------------\n'
 
         for item in response['details']:
             name = item['name']
@@ -80,7 +80,7 @@ class Command(object):
         host_status.publish_result()
 
         rstr = f'\n OVERVIEW: Hosts UP: {up}; DOWN: {down}\n'
-        rstr +='---------------------------------------------------------------\n'
+        rstr +='------------------------------------------------------------\n'
 
         for item in detailed:
             rstr += f'[{timestamp}] ' + item + '\n'
