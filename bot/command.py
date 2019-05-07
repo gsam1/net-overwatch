@@ -67,17 +67,15 @@ class Command(object):
 
     def nstatus(self):
         host_status = HostStatus()
-        _, up, down = host_status.pretty_status()
+        _, up, down = host_status.publish_result()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
         print(f'{timestamp} - Call to db')
-        host_status.publish_result()
         return f'[{timestamp}] - Hosts UP: {up}; DOWN: {down}'
     
     def dstatusn(self):
         host_status = HostStatus()
-        detailed, up, down = host_status.pretty_status()
+        detailed, up, down = host_status.publish_result()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        host_status.publish_result()
 
         rstr = f'\n OVERVIEW: Hosts UP: {up}; DOWN: {down}\n'
         rstr +='------------------------------------------------------------\n'

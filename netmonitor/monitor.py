@@ -95,6 +95,19 @@ class HostStatus:
                 'only_up': resp,
                 'only_down': no_resp}
 
+    def _format_results(self, hosts_status_res):
+        '''
+            Formats the parsed results from the hosts status.
+
+        '''
+        hosts_stat = hosts_status_res
+        host_status = [host['host']['hostname'] + ' (' + host['host']['address'] + ') ' + 
+                                 host['host']['status'] for host in hosts_stat['overview']]
+        total_up = len(hosts_stat['only_up'])
+        total_down = len(hosts_stat['only_down'])
+        self._host_status_pretty = (host_status, total_up, total_down)
+
+        return host_status, total_up, total_down
 
     def pretty_status(self):
         '''
@@ -113,7 +126,8 @@ class HostStatus:
         '''
             Uses the host_status method and returns the results so that it can be pushed to the checks
         '''
-        hosts_stats = self.hosts_status()['overview']
+        full_hosts_stats = self.hosts_status()
+        hosts_stats = full_hosts_stats['overview']
         #generate the timestap
         timestamp = datetime.datetime.now()
         group_id = self.dbhandler.get_last_pushed_group() + 1
@@ -127,6 +141,8 @@ class HostStatus:
             check.check_group = group_id # get the last host and increment it by one
             check.status = item['host']['status']
             self.dbhandler.push_one(check)
+
+        return self._format_results(full_hosts_stats)
 
 
     def push_to_db(self):
