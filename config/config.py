@@ -12,19 +12,19 @@ class SlackConfig(Config):
         self.slack_config = self.config_json['slack_api']
     
     def get_token(self):
-        return self.config_json['token']
+        return self.slack_config['token']
     
     def get_report_channel(self):
-        return self.config_json['report_channel']
+        return self.slack_config['report_channel']
     
     def get_report_from(self):
-        return self.config_json['report_from']
+        return self.slack_config['report_from']
     
     def get_report_to(self):
-        return self.config_json['report_to']
+        return self.slack_config['report_to']
     
     def get_reporting_interval(self):
-        return self.config_json['reporting_interval']
+        return self.slack_config['reporting_interval']
 
 
 class Options(Config):

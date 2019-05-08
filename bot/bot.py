@@ -1,4 +1,4 @@
-import os
+import os, sys
 import time
 import re
 import json
@@ -6,7 +6,16 @@ import event
 import command
 from slackclient import SlackClient
 
-TOKEN = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config/slack.json', 'r'))['token']
+try:
+    app_location = os.environ['NMONITOR']
+except:
+    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+config_location = os.path.join(app_location, 'config')
+sys.path.append(config_location)
+from config import SlackConfig, ModuleMap
+
+TOKEN = SlackConfig().get_token()
 
 class Bot(object):
     def __init__(self):
