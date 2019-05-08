@@ -13,3 +13,4 @@
 /netmonitor/__pycache__/*
 /config/json/*
 /.vscode/
+/config/__pycache__/*

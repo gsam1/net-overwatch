@@ -4,7 +4,7 @@ import json
 
 class Config:
     def __init__(self):
-        self.config_json = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config.json'))
+        self.config_json = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/json/configuration.json'))
 
 class SlackConfig(Config):
     def __init__(self):

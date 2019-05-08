@@ -8,7 +8,10 @@ try:
 except:
     app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
+config_location = os.path.join(app_location, 'config')
+sys.path.append(config_location)
+from config import Options, ModuleMap
+db_location = ModuleMap().get_db_loc()
 # for the dev path
 if not os.path.isdir(db_location):
     db_location = os.path.abspath(os.path.join(__file__, '..')) + '/dbhandler'
@@ -54,14 +57,12 @@ class HostStatus:
         '''
             Initalize the class to get all of the needed options and hosts.
         '''
-        path = os.path.dirname(os.path.realpath(__file__)) + '/config/config.json'
-        # self.hosts = json.load(open(path))['hosts']
         # TODO: load the hosts from the db query
         self.dbhandler = DBHandler()
         self.hosts = self.dbhandler.get_hosts()
         # self.hosts_addresses = [self.hosts[key] for key in self.hosts.keys()]
         self.hosts_addresses = [item['address'] for item in self.hosts]
-        self.response_time = json.load(open(path))['options']['response-time']
+        self.response_time = Options().get_response_time()
 
     def _host_mapper(self, address, status):
         '''
