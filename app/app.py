@@ -28,8 +28,8 @@ app = Flask(__name__)
 dbhandler = DBHandler()
 
 ####### Optional Slack Client
-CONFIG = json.load(open(os.path.dirname(os.path.realpath(bot_location)) + '/bot/config/slack.json', 'r'))
-sc = SlackClient(CONFIG['token'])
+TOKEN = SlackConfig().get_token()
+sc = SlackClient(TOKEN)
 ###### ROUTES
 
 @app.route('/')
