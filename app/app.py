@@ -8,9 +8,12 @@ try:
 except:
     app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-db_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['db']
-netmonitor_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['netmonitor']
-bot_location = json.load(open(os.path.join(app_location, 'configurator/module_map.json')))['bot']
+config_location = os.path.join(app_location, 'config')
+sys.path.append(config_location)
+from config import SlackConfig, ModuleMap
+db_location = ModuleMap().get_db_loc()
+netmonitor_location = ModuleMap().get_netmonitor_loc()
+bot_location = ModuleMap().get_bot_loc()
 sys.path.append(bot_location)
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
