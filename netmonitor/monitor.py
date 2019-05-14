@@ -60,7 +60,6 @@ class HostStatus:
         # TODO: load the hosts from the db query
         self.dbhandler = DBHandler()
         self.hosts = self.dbhandler.get_hosts()
-        # self.hosts_addresses = [self.hosts[key] for key in self.hosts.keys()]
         self.hosts_addresses = [item['address'] for item in self.hosts]
         self.response_time = Options().get_response_time()
 
@@ -68,9 +67,6 @@ class HostStatus:
         '''
             Maps the address to the hostname.
         '''
-        # for name, ip in self.hosts.items():
-        #     if ip == address:
-        #         hostname = name
         for item in self.hosts:
             if item['address'] == address:
                 hostname = item['name']
@@ -158,7 +154,6 @@ class HostStatus:
             overview, up, down = self.pretty_status()
 
         # Upload the status to the db
-        # dbhandler = DBHandler()
         status = Status()
         status.up = up
         status.down = down
@@ -173,6 +168,4 @@ class HostStatus:
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    # push_hosts_to_db(host_status.hosts)
-    # print(host_status.hosts_status()['overview'][0]['host']['hostname'])
     host_status.publish_result()

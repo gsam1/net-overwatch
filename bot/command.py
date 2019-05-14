@@ -41,7 +41,6 @@ class Command(object):
     
     def status(self):
         dbhandler = DBHandler()
-        # response = dbhandler.get_last(Status)
         response = dbhandler.get_last_pushed_results()
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(response['timestamp'])
         up = response['up']

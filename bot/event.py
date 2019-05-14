@@ -13,7 +13,6 @@ config_location = os.path.join(app_location, 'config')
 sys.path.append(config_location)
 from config import SlackConfig, ModuleMap
 
-# SLACK_CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + '/config/slack.json', 'r'))
 REPORT_CHANNEL = SlackConfig().get_report_channel()#SLACK_CONFIG['report_channel']
 REPORT_FROM = SlackConfig().get_report_from()#SLACK_CONFIG['report_from']
 REPORT_TO = SlackConfig().get_report_to()#SLACK_CONFIG['report_to']
