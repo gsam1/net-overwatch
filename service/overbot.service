@@ -1,0 +1,12 @@
+[Unit]
+Description=Overwatch Bot
+After=multi-user.target
+Conflicts=getty@tty1.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/python3 /home/pi/net-overwatch/bot/bot.py
+StandardInput=tty-force
+
+[Install]
+WantedBy=multi-user.target
