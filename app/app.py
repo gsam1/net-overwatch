@@ -107,10 +107,10 @@ def model_training_done():
     else:
         msg = 'Training of model complete!'
     # add mention
-    msg = '<@' + CONFIG['report_to'] + '>: HOST: ' + host + ' | ' + msg
+    msg = '<@' + SlackConfig().get_report_to() + '>: HOST: ' + host + ' | ' + msg
         
     # tell bot ('Model training done' or custom msg, host training)
-    sc.api_call("chat.postMessage", channel=CONFIG['report_channel'], text=msg, user=CONFIG['report_from'])
+    sc.api_call("chat.postMessage", channel=SlackConfig().get_report_channel(), text=msg, user=SlackConfig().get_report_from())
 
     return 'Message Sent'
 
