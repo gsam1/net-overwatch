@@ -168,4 +168,4 @@ class HostStatus:
 
 if __name__  == '__main__':
     host_status = HostStatus()
-    host_status.publish_result()
+    print(host_status.publish_result())
