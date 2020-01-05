@@ -1,28 +1,34 @@
-import command
+from . import command
 import os, sys
 import json
 import time
 from datetime import datetime, timedelta
 
-try:
-    app_location = os.environ['NMONITOR']
-except:
-    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# try:
+#     app_location = os.environ['NMONITOR']
+# except:
+#     app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-config_location = os.path.join(app_location, 'config')
-sys.path.append(config_location)
-from config import SlackConfig, ModuleMap
+# config_location = os.path.join(app_location, 'config')
+# sys.path.append(config_location)
+# from ..config.config import SlackConfig, ModuleMap
 
-REPORT_CHANNEL = SlackConfig().get_report_channel()#SLACK_CONFIG['report_channel']
-REPORT_FROM = SlackConfig().get_report_from()#SLACK_CONFIG['report_from']
-REPORT_TO = SlackConfig().get_report_to()#SLACK_CONFIG['report_to']
-REPORTING_INTERVAL = SlackConfig().get_reporting_interval()#SLACK_CONFIG['reporting_interval']
+
 
 
 class Event:
     def __init__(self, bot):
         self.bot = bot
-        self.command = command.Command()
+
+        self.report_channel = self.bot.slack_config.get_report_channel()#SLACK_CONFIG['report_channel']
+        self.report_from = self.bot.slack_config.get_report_from()#SLACK_CONFIG['report_from']
+        self.report_to = self.bot.slack_config.get_report_to()#SLACK_CONFIG['report_to']
+        self.reporting_interval = self.bot.slack_config.get_reporting_interval()#SLACK_CONFIG['reporting_interval']
+
+
+
+
+        self.command = command.Command(self.bot.dbhanlder, self.bot.nmonitor)
         self.starttime = datetime.now()
 
     def wait_for_event(self):
@@ -38,8 +44,8 @@ class Event:
             events = self.bot.slack_client.rtm_read()
         
         timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.now())
-        if self.report_time(REPORTING_INTERVAL):
-            self.handle_event(REPORT_TO, 'status detailed now', REPORT_CHANNEL)
+        if self.report_time(self.reporting_interval):
+            self.handle_event(self.report_to, 'status detailed now', self.report_channel)
         elif (events and len(events) > 0):
             for event in events:
                 print(timestamp + str(event))
