@@ -3,22 +3,22 @@ import json
 import os,sys
 import datetime
 # DIRTY HACKS
-try:
-    app_location = os.environ['NMONITOR']
-except:
-    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+# try:
+#     app_location = os.environ['NMONITOR']
+# except:
+#     app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-config_location = os.path.join(app_location, 'config')
-sys.path.append(config_location)
-from config import Options, ModuleMap
-db_location = ModuleMap().get_db_loc()
-# for the dev path
-if not os.path.isdir(db_location):
-    db_location = os.path.abspath(os.path.join(__file__, '..')) + '/dbhandler'
+# config_location = os.path.join(app_location, 'config')
+# sys.path.append(config_location)
+# from config import Options, ModuleMap
+# db_location = ModuleMap().get_db_loc()
+# # for the dev path
+# if not os.path.isdir(db_location):
+#     db_location = os.path.abspath(os.path.join(__file__, '..')) + '/dbhandler'
 
-sys.path.append(db_location)
+# sys.path.append(db_location)
 # importing the db handler
-from dbhandler import Status, DBHandler, Hosts, Checks
+# from dbhandler import Status, DBHandler, Hosts, Checks
 
 # Helpers
 def save_to_json(filename, location, data):
@@ -29,20 +29,20 @@ def save_to_json(filename, location, data):
     with open(file, 'w') as outfile:
         json.dump(data, outfile)
 
-def push_hosts_to_db(hosts):
+def push_hosts_to_db(hosts, dbhandle):
     '''Push the the hosts in the config file to the database.
         The idea is to call upon this function in the setup phase.
     
     Arguments:
         hosts {list or dict}
     '''
-    dbhandler = DBHandler()
+    dbhandler = dbhandle.DBHandler()
     # parse the hosts and create an array of host objects that need to be parsed.
     host_entries = []
 
     for host in hosts.keys():
         # assign to new table host
-        host_instance = Hosts()
+        host_instance = dbhandle.Hosts()
         host_instance.name = host
         host_instance.address = hosts[host]
         host_entries.append(host_instance)
@@ -53,15 +53,17 @@ def push_hosts_to_db(hosts):
 
 # Classes
 class HostStatus:
-    def __init__(self):
+    def __init__(self, dbhandle):
         '''
             Initalize the class to get all of the needed options and hosts.
+            Takes as an input a dbhanlder class, that, well, handles the db.
         '''
         # TODO: load the hosts from the db query
-        self.dbhandler = DBHandler()
+        self.dbhandle = dbhandle
+        self.dbhandler = dbhandle.DBHandler()
         self.hosts = self.dbhandler.get_hosts()
         self.hosts_addresses = [item['address'] for item in self.hosts]
-        self.response_time = Options().get_response_time()
+        self.response_time = dbhandle.Options().get_response_time()
 
     def _host_mapper(self, address, status):
         '''
@@ -131,7 +133,7 @@ class HostStatus:
 
         # push the results to the database
         for item in hosts_stats:
-            check = Checks()
+            check = self.dbhandle.Checks()
             # handle timestamp in the proper format
             check.timestamp = timestamp
             check.host = self.dbhandler.get_host_id(item['host']['hostname'])
@@ -154,18 +156,20 @@ class HostStatus:
             overview, up, down = self.pretty_status()
 
         # Upload the status to the db
-        status = Status()
+        status = self.dbhandle.Status()
         status.up = up
         status.down = down
         self.dbhandler.push_one(status)
 
         # Get the last update to the db and record it as the filename for the json_log
-        response = self.dbhandler.get_last(Status)
+        response = self.dbhandler.get_last(self.dbhandle.Status)
         filename = response['lastupdate']
-        logs_location = db_location + '/json_logs/'
+        parend_dir = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+        logs_location = os.path.join(parend_dir, 'db/json_logs/')
         save_to_json(filename, logs_location, overview)
 
 
 if __name__  == '__main__':
-    host_status = HostStatus()
-    print(host_status.publish_result())
+    pass
+    # host_status = HostStatus()
+    # print(host_status.publish_result())
