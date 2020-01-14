@@ -9,7 +9,7 @@ from slackclient import SlackClient
 class Bot(object):
     def __init__(self, slack_config, dbhandler, nmonitor):
         self.slack_config = slack_config
-        self.db_handler = dbhandler
+        self.dbhandler = dbhandler
         self.nmonitor = nmonitor
         self.slack_client = SlackClient(self.slack_config.get_token())
         self.bot_name = 'overwatch'

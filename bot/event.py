@@ -19,12 +19,12 @@ from datetime import datetime, timedelta
 class Event:
     def __init__(self, bot):
         self.bot = bot
-
+        
         self.report_channel = self.bot.slack_config.get_report_channel()#SLACK_CONFIG['report_channel']
         self.report_from = self.bot.slack_config.get_report_from()#SLACK_CONFIG['report_from']
         self.report_to = self.bot.slack_config.get_report_to()#SLACK_CONFIG['report_to']
         self.reporting_interval = self.bot.slack_config.get_reporting_interval()#SLACK_CONFIG['reporting_interval']
-        self.command = command.Command(self.bot.dbhanlder, self.bot.nmonitor)
+        self.command = command.Command(self.bot.dbhandler, self.bot.nmonitor)
         self.starttime = datetime.now()
 
     def wait_for_event(self):

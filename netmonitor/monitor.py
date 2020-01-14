@@ -29,7 +29,7 @@ def save_to_json(filename, location, data):
     with open(file, 'w') as outfile:
         json.dump(data, outfile)
 
-def push_hosts_to_db(hosts, dbhandle):
+def push_hosts_to_db(hosts, dbhandle, options):
     '''Push the the hosts in the config file to the database.
         The idea is to call upon this function in the setup phase.
     
