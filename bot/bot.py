@@ -2,24 +2,16 @@ import os, sys
 import time
 import re
 import json
-import event
-import command
+from . import event
+from . import command
 from slackclient import SlackClient
 
-try:
-    app_location = os.environ['NMONITOR']
-except:
-    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
-config_location = os.path.join(app_location, 'config')
-sys.path.append(config_location)
-from config import SlackConfig, ModuleMap
-
-TOKEN = SlackConfig().get_token()
-
 class Bot(object):
-    def __init__(self):
-        self.slack_client = SlackClient(TOKEN)
+    def __init__(self, slack_config, dbhandler, nmonitor):
+        self.slack_config = slack_config
+        self.dbhandler = dbhandler
+        self.nmonitor = nmonitor
+        self.slack_client = SlackClient(self.slack_config.get_token())
         self.bot_name = 'overwatch'
         self.bot_id = self.get_bot_id()
          
@@ -55,4 +47,5 @@ class Bot(object):
 
 
 if __name__ == '__main__':
-    Bot()
+    # Bot()
+    pass

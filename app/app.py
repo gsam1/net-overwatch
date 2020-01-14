@@ -1,3 +1,4 @@
+#!/home/fury/anaconda3/envs/overwatch/bin/python3
 from flask import Flask, request
 from flask import jsonify
 import sys, os, json
@@ -8,19 +9,23 @@ try:
 except:
     app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
-config_location = os.path.join(app_location, 'config')
+par_dir = os.path.dirname(os.getcwd())
+config_location = os.path.join(par_dir, 'config')
+netmonitor_location = os.path.join(par_dir, 'netmonitor')
+db_location = os.path.join(par_dir, 'db')
+# config_location = os.path.join(app_location, 'config')
 sys.path.append(config_location)
 from config import SlackConfig, ModuleMap
-db_location = ModuleMap().get_db_loc()
-netmonitor_location = ModuleMap().get_netmonitor_loc()
-bot_location = ModuleMap().get_bot_loc()
+# db_location = ModuleMap().get_db_loc()
+# netmonitor_location = ModuleMap().get_netmonitor_loc()
+# bot_location = ModuleMap().get_bot_loc()=
+bot_location = os.path.join(par_dir, 'bot')
 sys.path.append(bot_location)
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
 from dbhandler import DBHandler
 from monitor import HostStatus
 from slackclient import SlackClient
-
 
 
 ENV = 'development'
