@@ -1,7 +1,10 @@
+import os, sys
 from bot.bot import Bot
 from config.config import SlackConfig, Options
 from db.dbhandler import DBHandler, Hosts, Checks 
 from netmonitor.monitor import HostStatus
+
+from multiprocessing import Process
 
 class DotDict(dict):
     def __getattr__(self, key):
@@ -13,9 +16,9 @@ class DotDict(dict):
             self[key] = val
 
 
-def main():
+def start_bot():
     '''
-        Runs Everything
+        Start the slack chatbot
     '''
     slackconfig = SlackConfig()
     dbhandler = DBHandler()
@@ -31,8 +34,21 @@ def main():
 
     bot = Bot(slackconfig, dbhandler, netmonitor)
 
+def start_api():
+    '''
+        Start the reporting api
+    '''
+    os.system('bash start_api.sh')
 
-    
+def main():
+    '''
+        Runs Everything
+    '''
+    bot = Process(target = start_bot)
+    api = Process(target = start_api)
+
+    bot.start()
+    api.start()
 
 
 
