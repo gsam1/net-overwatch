@@ -1,28 +1,20 @@
-#!/home/fury/anaconda3/envs/overwatch/bin/python3
+#!/usr/bin/python3
 from flask import Flask, request
 from flask import jsonify
 import sys, os, json
 import datetime
 # DEM DIRTY HACKS
-try:
-    app_location = os.environ['NMONITOR']
-except:
-    app_location = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
 par_dir = os.path.dirname(os.getcwd())
 config_location = os.path.join(par_dir, 'config')
 netmonitor_location = os.path.join(par_dir, 'netmonitor')
 db_location = os.path.join(par_dir, 'db')
-# config_location = os.path.join(app_location, 'config')
-sys.path.append(config_location)
-from config import SlackConfig, ModuleMap
-# db_location = ModuleMap().get_db_loc()
-# netmonitor_location = ModuleMap().get_netmonitor_loc()
-# bot_location = ModuleMap().get_bot_loc()=
 bot_location = os.path.join(par_dir, 'bot')
+sys.path.append(config_location)
 sys.path.append(bot_location)
 sys.path.append(netmonitor_location)
 sys.path.append(db_location)
+
+from config import SlackConfig
 from dbhandler import DBHandler
 from monitor import HostStatus
 from slackclient import SlackClient
@@ -35,6 +27,8 @@ dbhandler = DBHandler()
 ####### Optional Slack Client
 TOKEN = SlackConfig().get_token()
 sc = SlackClient(TOKEN)
+
+
 ###### ROUTES
 
 @app.route('/')
@@ -100,23 +94,44 @@ def get_current_hosts_status():
     return json.dumps(resp)
 
 # NEW FEATURE
-@app.route('/model_training_done', methods=['POST'])
-def model_training_done():
-    '''A route that tells the bot if the ml model running is done
+@app.route('/task_done', methods=['POST'])
+def task_done():
+    '''
+        A route that accepts a json with a report that a task is done
+        Example structure of the request json
+        {
+            "host": host which reports that the task is done,
+            "task_desc": short description of the task performed
+        }
     '''
     req = request.get_json()
     host = req['host']
-    msg = ''
-    if 'msg' in req.keys():
-        msg = req['msg']
-    else:
-        msg = 'Training of model complete!'
-    # add mention
-    msg = '<@' + SlackConfig().get_report_to() + '>: HOST: ' + host + ' | ' + msg
-        
-    # tell bot ('Model training done' or custom msg, host training)
-    sc.api_call("chat.postMessage", channel=SlackConfig().get_report_channel(), text=msg, user=SlackConfig().get_report_from())
+    task = req['task_desc']
+    msg = '<@' + SlackConfig().get_report_to() + '>: HOST: ' + host + ' | ' + task
 
+    # tell bot ('Model training done' or custom msg, host training)
+    sc.api_call("chat.postMessage", 
+                channel=SlackConfig().get_report_channel(), 
+                text=msg, 
+                user=SlackConfig().get_report_from())
+
+    return 'Message Sent'
+
+# SHORT API for the specific purpose of reporting model_training
+@app.route('/task/ml_td', methods=['GET'])
+def model_training_done():
+    '''
+        A route that tells the bot if the ml model running is done.
+
+    '''
+    host = request.args.get('host')
+    msg = '<@' + SlackConfig().get_report_to() + '>: HOST: ' + host + ' | Model Training Done' 
+    sc.api_call("chat.postMessage", 
+                channel=SlackConfig().get_report_channel(), 
+                text=msg, 
+                user=SlackConfig().get_report_from())
+
+    
     return 'Message Sent'
 
 
