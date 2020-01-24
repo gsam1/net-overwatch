@@ -105,8 +105,7 @@ def task_done():
         }
     '''
     req = request.get_json()
-    # req = json.load(req)
-    print(type(req))
+    req = json.loads(req)
     host = req['host']
     task = req['task_desc']
     msg = '<@' + SlackConfig().get_report_to() + '>: HOST: ' + host + ' | ' + task
