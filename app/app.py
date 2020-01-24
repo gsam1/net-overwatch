@@ -51,7 +51,7 @@ def update_host():
     # update the hostname
     dbhandler.update_host(id=host_id, params_to_update=req['vars'])
 
-    return f'Host {hostname} updated'
+    return 'Host ' + hostname + ' updated'
                                                                                                                 
 @app.route('/get_last_hosts_status', methods=['GET'])
 def get_last_hosts_status():
