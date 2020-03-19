@@ -26,6 +26,13 @@ class SlackConfig(Config):
     def get_reporting_interval(self):
         return self.slack_config['reporting_interval']
 
+class DBOptions(Config):
+    def __init__(self):
+        super().__init__()
+        self.db_config = self.config_json['db_options']
+    
+    def get_db_uri(self):
+        return self.db_config['db_uri']
 
 class Options(Config):
     def __init__(self):

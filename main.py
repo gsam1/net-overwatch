@@ -1,6 +1,6 @@
 import os, sys
 from bot.bot import Bot
-from config.config import SlackConfig, Options
+from config.config import SlackConfig, Options, DBOptions
 from db.dbhandler import DBHandler, Hosts, Checks 
 from netmonitor.monitor import HostStatus
 
@@ -21,7 +21,8 @@ def start_bot():
         Start the slack chatbot
     '''
     slackconfig = SlackConfig()
-    dbhandler = DBHandler()
+    dboptions = DBOptions()
+    dbhandler = DBHandler(remotedb_uri=dboptions.get_db_uri())
     # there is probably a better way of doing this but..
     dbhandle = DotDict({
         'DBHandler': DBHandler,

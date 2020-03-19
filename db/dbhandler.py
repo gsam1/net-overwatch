@@ -42,9 +42,13 @@ class Options(Base):
     value = Column(String)
 
 class DBHandler():
-    def __init__(self):
+    def __init__(self, remotedb_uri=None):
         folder = os.path.dirname(os.path.realpath(__file__))
+
         sqlconnection = 'sqlite:///' + folder + '/local.db'
+        if remotedb_uri is not None:
+            sqlconnection = remotedb_uri
+        
         self.engine = create_engine(sqlconnection)
 
     def _session(self):
