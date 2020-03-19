@@ -14,3 +14,4 @@
 /config/json/*
 /.vscode/
 /config/__pycache__/*
+/migrate_to_wh/*
